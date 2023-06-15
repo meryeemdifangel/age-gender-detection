@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gender and Age Detection - Result</title>
+    <style>
+        body {
+            text-align: center;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        .result {
+            margin-top: 30px;
+        }
+        .result-card {
+            display: inline-block;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            margin: 20px;
+        }
+        .result-card img {
+            margin-top: 10px;
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gender and Age Detection - Result</h1>
+    {% for result in results %}
+        <div class="result-card">
+            <h2>Result:</h2>
+            <p>Gender: {{ result.gender }}</p>
+            <p>Age: {{ result.age }}</p>
+            <img src="data:image/jpeg;base64,{{ result.image }}" alt="Face Image">
+        </div>
+    {% endfor %}
+</body>
+</html>

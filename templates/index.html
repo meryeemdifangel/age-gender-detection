@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gender and Age Detection</title>
+    <style>
+        body {
+            text-align: center;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        .upload-form {
+            display: inline-block;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .upload-form p {
+            margin-top: 10px;
+            color: #777;
+        }
+        .upload-form input[type="file"] {
+            display: none;
+        }
+        .upload-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .upload-button:hover {
+            background-color: #0056b3;
+        }
+        .uploaded-image {
+            margin-top: 30px;
+            max-width: 400px;
+        }
+        .result {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gender and Age Detection</h1>
+    <form class="upload-form" method="post" action="/" enctype="multipart/form-data">
+        <label for="image-upload" class="upload-button">Upload Image</label>
+        <input id="image-upload" type="file" name="image">
+        <p>Supported file types: JPG, JPEG, PNG</p>
+        <p>Maximum file size: 5MB</p>
+        <button type="submit" class="upload-button">Detect</button>
+    </form>
+    <div class="result">
+        {% if results %}
+            <h2>Result:</h2>
+            {% for result in results %}
+                <p>Gender: {{ result.gender }}</p>
+                <p>Age: {{ result.age }}</p>
+                <img class="uploaded-image" src="data:image/jpeg;base64,{{ result.image }}" alt="Uploaded Image">
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>

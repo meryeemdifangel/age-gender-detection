@@ -45,33 +45,32 @@ faceNet=cv2.dnn.readNet(faceModel,faceProto)
 ageNet=cv2.dnn.readNet(ageModel,ageProto)
 genderNet=cv2.dnn.readNet(genderModel,genderProto)
 
-video=cv2.VideoCapture(args.image if args.image else 0)
+
+image = cv2.imread(args.image)  # Read the image specified by --image argument
+cv2.imshow("Original Image", image)
 padding=20
-while cv2.waitKey(1)<0 :
-    hasFrame,frame=video.read()
-    if not hasFrame:
-        cv2.waitKey()
-        break
-    
-    resultImg,faceBoxes=highlightFace(faceNet,frame)
-    if not faceBoxes:
-        print("No face detected")
 
-    for faceBox in faceBoxes:
-        face=frame[max(0,faceBox[1]-padding):
-                   min(faceBox[3]+padding,frame.shape[0]-1),max(0,faceBox[0]-padding)
-                   :min(faceBox[2]+padding, frame.shape[1]-1)]
 
-        blob=cv2.dnn.blobFromImage(face, 1.0, (227,227), MODEL_MEAN_VALUES, swapRB=False)
-        genderNet.setInput(blob)
-        genderPreds=genderNet.forward()
-        gender=genderList[genderPreds[0].argmax()]
-        print(f'Gender: {gender}')
+resultImg, faceBoxes = highlightFace(faceNet, image)
+if not faceBoxes:
+    print("No face detected")
 
-        ageNet.setInput(blob)
-        agePreds=ageNet.forward()
-        age=ageList[agePreds[0].argmax()]
-        print(f'Age: {age[1:-1]} years')
+for faceBox in faceBoxes:
+    face=image[max(0,faceBox[1]-padding):
+                   min(faceBox[3]+padding,image.shape[0]-1),max(0,faceBox[0]-padding)
+                   :min(faceBox[2]+padding, image.shape[1]-1)]
 
-        cv2.putText(resultImg, f'{gender}, {age}', (faceBox[0], faceBox[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,255), 2, cv2.LINE_AA)
-        cv2.imshow("Detecting age and gender", resultImg)
+    blob = cv2.dnn.blobFromImage(face, 1.0, (227, 227), MODEL_MEAN_VALUES, swapRB=False)
+    genderNet.setInput(blob)
+    genderPreds = genderNet.forward()
+    gender = genderList[genderPreds[0].argmax()]
+    print(f'Gender: {gender}')
+
+    ageNet.setInput(blob)
+    agePreds = ageNet.forward()
+    age = ageList[agePreds[0].argmax()]
+    print(f'Age: {age[1:-1]} years')
+
+    cv2.putText(resultImg, f'{gender}, {age}', (faceBox[0], faceBox[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8,
+                (0, 255, 255), 2, cv2.LINE_AA)
+
